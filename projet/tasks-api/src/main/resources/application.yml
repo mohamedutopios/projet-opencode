@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: tasks-api
+  config:
+    # .env à la racine du projet (format clé=valeur), ignoré s'il n'existe pas
+    import: optional:file:.env[.properties]
+  mvc:
+    problemdetails:
+      enabled: true
+
+server:
+  port: ${PORT:8080}
+
+tasks:
+  api-token: ${API_TOKEN:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

@@ -1,0 +1,32 @@
+# MCP server stdio : stdout est réservé au protocole JSON-RPC.
+# Aucune bannière, aucun log console : les logs vont dans un fichier.
+spring:
+  application:
+    name: tasks-mcp
+  main:
+    web-application-type: none
+    banner-mode: off
+  config:
+    # .env à la racine du projet (OpenCode lance le serveur depuis la racine)
+    import: optional:file:.env[.properties]
+  ai:
+    mcp:
+      server:
+        name: tasks-api-mcp
+        version: 1.0.0
+        type: sync
+        stdio: true
+        instructions: Outils pour piloter tasks-api (gestion de tâches) en fonctionnement.
+
+tasks:
+  api:
+    url: ${TASKS_API_URL:http://localhost:8080}
+    token: ${TASKS_API_TOKEN:${API_TOKEN:}}
+
+logging:
+  console:
+    enabled: false
+  file:
+    name: ${java.io.tmpdir}/tasks-mcp.log
+  level:
+    root: INFO
