@@ -1,0 +1,78 @@
+{
+  // Schéma officiel : validation + autocomplétion dans l'éditeur
+  "$schema": "https://opencode.ai/config.json",
+
+  // Modèle principal et modèle léger (titres de session, résumés).
+  // Changer ici, ou à la volée dans le TUI avec /models.
+  "model": "anthropic/claude-sonnet-4-5",
+  "small_model": "anthropic/claude-haiku-4-5",
+
+  // Agent sélectionné au démarrage (Tab pour basculer vers plan).
+  "default_agent": "build",
+
+  // Règles complémentaires à AGENTS.md, chargées dans le contexte de chaque session.
+  "instructions": ["docs/conventions.md"],
+
+  // Permissions globales : allow | ask | deny. La DERNIÈRE règle qui matche l'emporte,
+  // donc le joker "*" en premier, les exceptions ensuite.
+  "permission": {
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "edit": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow",
+      // Artefacts de build et wrapper Maven : jamais modifiés à la main
+      "*/target/*": "deny",
+      "mvnw": "deny",
+      "mvnw.cmd": "deny",
+      ".mvn/*": "deny"
+    },
+    "bash": {
+      "*": "ask",
+      "ls*": "allow",
+      "pwd": "allow",
+      "java -version": "allow",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git show*": "allow",
+      // Boucle de dev Maven sans validation
+      "./mvnw compile*": "allow",
+      "./mvnw -q compile*": "allow",
+      "./mvnw test*": "allow",
+      "./mvnw -q test*": "allow",
+      "./mvnw -B test*": "allow",
+      "./mvnw verify*": "allow",
+      "./mvnw -q verify*": "allow",
+      "./mvnw -B verify*": "allow",
+      "./mvnw -pl * test*": "allow",
+      "./mvnw -q -pl * test*": "allow",
+      "./mvnw -pl * verify*": "allow",
+      "./mvnw -q -pl * verify*": "allow",
+      "./mvnw dependency:tree*": "allow",
+      // Lancer l'application bloque le terminal de l'agent : toujours demander
+      "./mvnw *spring-boot:run*": "ask",
+      "./mvnw *clean*": "ask",
+      // Publication et release interdites
+      "./mvnw *deploy*": "deny",
+      "./mvnw *release*": "deny",
+      "git commit*": "ask",
+      "git push*": "deny",
+      "git reset --hard*": "deny",
+      "rm -rf*": "deny",
+      "sudo *": "deny",
+      "curl *": "ask",
+      // Empêche le contournement de la règle read via le shell (cat .env, source .env…)
+      "*.env*": "deny"
+    },
+    "webfetch": "ask",
+    "external_directory": "ask",
+    "doom_loop": "ask"
+  }
+}

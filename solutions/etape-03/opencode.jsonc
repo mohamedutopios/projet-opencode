@@ -1,0 +1,15 @@
+{
+  // Schéma officiel : validation + autocomplétion dans l'éditeur
+  "$schema": "https://opencode.ai/config.json",
+
+  // Modèle principal et modèle léger (titres de session, résumés).
+  // Changer ici, ou à la volée dans le TUI avec /models.
+  "model": "anthropic/claude-sonnet-4-5",
+  "small_model": "anthropic/claude-haiku-4-5",
+
+  // Agent sélectionné au démarrage (Tab pour basculer vers plan).
+  "default_agent": "build",
+
+  // Règles complémentaires à AGENTS.md, chargées dans le contexte de chaque session.
+  "instructions": ["docs/conventions.md"]
+}
